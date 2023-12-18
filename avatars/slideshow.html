@@ -115,9 +115,33 @@ svg circle {
     stroke-dashoffset: 113px;
 }
 }
+.clicker{
+    height: 15px;
+  width: 15px;
+  border: 2px solid #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+.clicker:hover{
+    cursor: pointer;
+}
+#navigator{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    /* margin-left: 0; 
+    margin-right: auto; */
+    padding: 5px;
+    z-index: 2; 
+    background-color: rgba(128,128,128, 0.4);
+    border-radius: 25px;
+}
     </style>
 </head>
 <body>
+    <div id="navigator">
+
+    </div>
     <a href="/#!/details?id=a0ea905b080e5fa9c34a48bb091152e9&serverId=3e1fde90835b4c3890a69dbabf6d28d8" class="slide" target="_top" rel="noreferrer">
         <img class="backdrop" src="aot-backdrop.png" alt="Backdrop">
         <img class="logo" src="/Items/75ef9e20f74655927f723abdaafca754/Images/Logo" alt="Logo">
@@ -149,35 +173,67 @@ svg circle {
         </div>
     </a>
 <script>
-    // Function to shuffle an array
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+    // function to generate the navigator
+    function generateNavigator(array) {
+        let string = "";
+        for (let i = 0; i < array.length; i++) {
+            string += '<span class="clicker" data-slide="'
+            string += i
+            string += '" ref="target"> </span>'
+            string += " "
         }
-
-        return array;
+        document.querySelector("#navigator").innerHTML = string
     }
+    // Function to shuffle an array
+    // function shuffleArray(array) {
+    //     for (let i = array.length - 1; i > 0; i--) {
+    //         const j = Math.floor(Math.random() * (i + 1));
+    //         [array[i], array[j]] = [array[j], array[i]];
+    //     }
+
+    //     return array;
+    // }
 
     var slides = document.querySelectorAll(".slide");
+    
+    let slidesArr = Array.from({ length: slides.length }, (_, i) => i);
+    generateNavigator(slides);
+    var clickers = document.querySelectorAll(".clicker");
+    function myFunction(){
+        let slide = this.getAttribute("data-slide");
+        showSlide(parseInt(slide));
+    }
+    for (var i = 0; i < clickers.length; i++){
+        clickers[i].addEventListener('click', myFunction, false)
+    }
     var currentSlide = 0;
-    // var shuffledIndexes = shuffleArray(Array.from({ length: slides.length }, (_, i) => i));
+    // generateNavigator(slidesArr);
+    // document.querySelector("#navigator").innerHTML = generateNavigator(slidesArr)
+    // var shuffledIndexes = shuffleArray(slidesArr);
 
     function showSlide(index) {
         for (var i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
+            clickers[i].style.backgroundColor = "#EEEEEE"
         }
-        // slides[shuffledIndexes[index]].style.display = "block";
         slides[index].style.display = "block";
+        clickers[index].style.backgroundColor = "#77DD77"
         countdown = 10; // Reset countdown for each slide
+        // updateClickers(index);
     }
+
+    // function updateClicker(index){
+        
+    // }
 
     function nextSlide() {
         currentSlide = (currentSlide + 1) % slides.length;
         showSlide(currentSlide);
     }
 
+
     showSlide(currentSlide);
+    
 
     // Initial call for the first slide
     var countdown = 10;
