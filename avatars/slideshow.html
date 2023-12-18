@@ -118,7 +118,7 @@ svg circle {
 .clicker{
     height: 15px;
   width: 15px;
-  border: 2px solid #bbb;
+  border: 2px solid #93c47d;
   border-radius: 50%;
   display: inline-block;
 }
@@ -126,14 +126,17 @@ svg circle {
     cursor: pointer;
 }
 #navigator{
+    display:flex;
+    gap: 5px;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 5px;
+    right: 5px;
     /* margin-left: 0; 
     margin-right: auto; */
-    padding: 5px;
+    padding: 8px;
+    justify-content: center;
     z-index: 2; 
-    background-color: rgba(128,128,128, 0.4);
+    background-color: rgba(128,128,128, 0.6);
     border-radius: 25px;
 }
     </style>
@@ -199,14 +202,16 @@ svg circle {
     let slidesArr = Array.from({ length: slides.length }, (_, i) => i);
     generateNavigator(slides);
     var clickers = document.querySelectorAll(".clicker");
-    function myFunction(){
-        let slide = this.getAttribute("data-slide");
-        showSlide(parseInt(slide));
-    }
+    
     for (var i = 0; i < clickers.length; i++){
         clickers[i].addEventListener('click', myFunction, false)
     }
     var currentSlide = 0;
+    function myFunction(){
+        let slide = this.getAttribute("data-slide");
+        currentSlide = parseInt(slide);
+        showSlide(currentSlide);
+    }
     // generateNavigator(slidesArr);
     // document.querySelector("#navigator").innerHTML = generateNavigator(slidesArr)
     // var shuffledIndexes = shuffleArray(slidesArr);
@@ -214,10 +219,10 @@ svg circle {
     function showSlide(index) {
         for (var i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
-            clickers[i].style.backgroundColor = "#EEEEEE"
+            clickers[i].style.backgroundColor = "#616362"
         }
         slides[index].style.display = "block";
-        clickers[index].style.backgroundColor = "#77DD77"
+        clickers[index].style.backgroundColor = "#d5e6da"
         countdown = 10; // Reset countdown for each slide
         // updateClickers(index);
     }
