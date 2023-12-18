@@ -6,21 +6,6 @@ INPUT_FILE="list.txt"
 RUN_PRE_SCRIPT=false
 RUN_M_SCRIPT=false
 
-
-get_item_description() {
-    local user_id="$1"
-    local item_id="$2"
-    local description
-    description=$(curl -s -H "X-Emby-Token: $api_key" "http://$website/emby/Users/$user_id/Items?Ids=$item_id&fields=Overview" | jq -r '.Items[0].Overview')
-    echo "$description"
-}
-
-# Set the user ID and API key for the request
-website="www.example.com" # replace with your domain name
-user_id="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Replace with the actual user ID
-api_key="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Replace with your Jellyfin API key
-
-
 # Function to display usage information
 show_help() {
     echo "Usage: $0 [OPTIONS]"
@@ -29,7 +14,7 @@ show_help() {
     echo "  -h, --header HEADER  Set the header text (default: Featured Content)"
     echo "  -l, --list FILE      Specify the input file containing item IDs (default: list.txt)"
     echo "  -p, --pre-script     Run a pre-script before launching the main script"
-#    echo "  -m, --m-script       run the shuffle script the favorites order randomly (only with -p)"
+    echo "  -m, --m-script       run the shuffle script the favorites order randomly (only with -p)"
     echo "  -help                Show this help message"
     echo "EXAMPLE:"
     echo "  $0 -p -m -h 'Custom Header' -l /path/to/list.txt"
@@ -37,10 +22,10 @@ show_help() {
 }
 
 # Function to run the m-script
-#run_m_script() {
-#    echo "Running m-script (shuffle.py)"
-#    python3 ./shuffle.py
-#}
+run_m_script() {
+    echo "Running m-script (shuffle.py)"
+    python3 ./shuffle.py
+}
 
 # Function to run a pre-script
 run_pre_script() {
@@ -62,9 +47,9 @@ while [[ "$#" -gt 0 ]]; do
         -p|--pre-script)
             RUN_PRE_SCRIPT=true
             ;;
-#        -m|--m-script)
-#            RUN_M_SCRIPT=true
-#            ;;
+        -m|--m-script)
+            RUN_M_SCRIPT=true
+            ;;
         -help)
             show_help
             ;;
@@ -78,9 +63,9 @@ done
 
 # Run the m-script if -p flag and -m flag are set
 if [ "$RUN_PRE_SCRIPT" = true ]; then
-#    if [ "$RUN_M_SCRIPT" = true ]; then
-#        run_m_script
-#    fi
+    if [ "$RUN_M_SCRIPT" = true ]; then
+        run_m_script
+    fi
     run_pre_script
 fi
 
@@ -97,18 +82,6 @@ cat <<EOL > slideshow.html
 <head>
     <title>Slideshow</title>
     <style>
-
-@keyframes fadeInOut {
-    0%, 100% { opacity: 0; }
-    10%, 90% { opacity: 1; }
-}
-
-@media (max-width: 768px) {
-    .item-description {
-        display: none;
-    }
-}
-
         /* Include the Google Fonts stylesheet for the Noto Sans font */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
@@ -128,15 +101,7 @@ p {
   font-size: 16px;
   color: #333;
 }
-.grad {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width:  70%;
-    height: 100%;
-    background: linear-gradient(to right, rgb(16 16 16), rgba(0, 0, 0, 0)); /* Adjust gradient colors as needed */
-    z-index: 1; /* Place the "grad" div just in front of the backdrop */
-}
+
 /* Example: Change the font size and color for headers */
 h1 {
   font-size: 36px;
@@ -153,28 +118,23 @@ h1 {
             width: 100vw;
             height: 100vh;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            animation: fadeInOut 10.5s infinite;
         }
 .backdrop {
     position: absolute;
     top: 50%; /* Adjust this value to position the backdrop vertically */
-    right: 0;
-    width: 70%;
+    left: 0;
+    width: 100%;
     height: auto;
     transform: translateY(-45%); /* Vertically center the backdrop */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background: linear-gradient(to right, rgba(16, 16, 16, 1), rgba(0, 0, 0, 0));
+    object-fit: cover; /* Maintain aspect ratio (typically 16:9) */
 }
         .logo {
             position: absolute;
-            top: 10px;
+            bottom: 10px;
             left: 10px;
             max-height: 50%;
             max-width:30%;
             width: auto;
-            z-index: 999999;
         }
 .logo::before {
     content: "";
@@ -196,19 +156,6 @@ h1 {
     color: white;
     font-size: 25px;
 }
-.item-description {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: white;
-    font-size: 19px;
-    max-width: 30vw;
-    padding: 10px; /* Add padding for spacing */
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-/*    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgb(0 0 0 / 88%));*/
-    border-radius: 5px; /* Add rounded corners */
-    z-index: 999999;
-}
         .timer {
             position: absolute;
             display: none;
@@ -225,27 +172,17 @@ h1 {
 <body>
 EOL
 
-# Iterate through the main item IDs and create slides with descriptions
+# Iterate through the main item IDs and create slides
 for item_id in "${main_item_ids[@]}"; do
     # Generate the backdrop and logo URLs based on the item ID
     backdrop_url="/Items/$item_id/Images/Backdrop/0"
     logo_url="/Items/$item_id/Images/Logo"
-    full_description=$(get_item_description "$user_id" "$item_id")
-
-    # Limit the description to 120 characters
-    if [ ${#full_description} -gt 120 ]; then
-        description="${full_description:0:117}..."  # Truncate to 117 characters and add "..."
-    else
-        description="$full_description"
-    fi
 
     cat <<EOL >> slideshow.html
     <a href="/#!/details?id=$item_id" class="slide" target="_top" rel="noreferrer">
-        <div class="grad"></div>
-        <img class="backdrop" src="$backdrop_url" alt="Backdrop" loading="lazy">
-        <img class="logo" src="$logo_url" alt="Logo" loading="lazy">
+        <img class="backdrop" src="$backdrop_url" alt="Backdrop">
+        <img class="logo" src="$logo_url" alt="Logo">
         <div class="featured-content">$HEADER</div>
-        <div class="item-description">$description</div>
         <div class="timer"></div>
     </a>
 EOL
@@ -305,4 +242,5 @@ EOL
 
 # Display a message indicating the HTML file has been created
 echo "Slideshow HTML file created: slideshow.html"
-#cp slideshow.html /path/to/mapped/slideshow.html
+
+#cp slideshow.html /path/to/mapped/avatars/slideshow.html
