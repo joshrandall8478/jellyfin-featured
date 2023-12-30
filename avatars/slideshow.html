@@ -136,7 +136,7 @@ svg circle {
     padding: 8px;
     justify-content: center;
     z-index: 2; 
-    background-color: rgba(128,128,128, 0.6);
+    background-color: rgba(24, 24, 24, 0.863);
     border-radius: 25px;
 }
     </style>
@@ -239,10 +239,10 @@ svg circle {
     function showSlide(index) {
         for (var i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
-            clickers[i].style.backgroundColor = "#616362"
+            clickers[i].style.backgroundColor = "#2b2b2b"
         }
         slides[index].style.display = "block";
-        clickers[index].style.backgroundColor = "#d5e6da"
+        clickers[index].style.backgroundColor = "#f5f5f5"
         countdown = 10; // Reset countdown for each slide
         // updateClickers(index);
     }
