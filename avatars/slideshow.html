@@ -41,14 +41,46 @@ h1 {
             height: 100vh;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
+
+
+/* Animations */
+@keyframes slideLeftDisappear{
+    0%{
+        left: 50%;
+        /* opacity: 0; */
+    }
+    100%{
+        left:0px;
+        /* opactiy: 1; */
+        display:none
+    }
+
+}
+@keyframes slideRight{
+    0%{
+        right: 50%;
+        /* opacity: 0; */
+    }
+    100%{
+        right:0px;
+        /* opactiy: 1; */
+    }
+}
+
+/* Transition class after backdrop is removed */
+.transition{
+    animation: slideLeft 1s ease-out 0s forward;
+}
+
 .backdrop {
     position: absolute;
     top: 50%; /* Adjust this value to position the backdrop vertically */
-    left: 0;
+    /* left: 0; */
     width: 100%;
     height: auto;
     transform: translateY(-45%); /* Vertically center the backdrop */
     object-fit: cover; /* Maintain aspect ratio (typically 16:9) */
+    animation: slideRight 1s ease-out 0s;
 }
         .logo {
             position: absolute;
