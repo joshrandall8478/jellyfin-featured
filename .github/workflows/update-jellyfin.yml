@@ -8,6 +8,7 @@ on:
 jobs:
 
   build:
+    environment: Update Jellyfin Banner
     name: Pull to Server
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +17,7 @@ jobs:
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-        # tags: tag:ci
+        tags: tag:ci
     - name: Jellyfin Pull
       uses: appleboy/ssh-action@master
       with:
