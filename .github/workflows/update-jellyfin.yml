@@ -28,3 +28,4 @@ jobs:
         script: |
           cd ~/jellyfin/jellyfin-featured
           git pull
+          git rebase
