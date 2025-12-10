@@ -1,5 +1,5 @@
 let folder = "reze/";
-const limit = 7
+const limit = 8
 const format = "jpg";
 
 const mainRandom = Math.floor( Math.random() * limit ) + 1 ;
