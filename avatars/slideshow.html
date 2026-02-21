@@ -10,6 +10,7 @@
 /* Apply the font to the body or specific elements */
 body {
   font-family: 'Noto Sans', sans-serif;
+  background-color: black;
 }
 
 /* You can customize other text styles as needed */
@@ -33,17 +34,36 @@ h2 {
     font-size: 36px;
 }
 
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        .slide {
-            /* position: relative; */
-            width: 100vw;
-            height: 100vh;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.slide {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 .backdrop {
     position: absolute;
     top: 50%; /* Adjust this value to position the backdrop vertically */
@@ -52,15 +72,21 @@ h2 {
     height: auto;
     transform: translateY(-45%); /* Vertically center the backdrop */
     object-fit: cover; /* Maintain aspect ratio (typically 16:9) */
+    transition: opacity 0.3s ease;
+    animation: fadeIn 0.5s ease-in;
 }
-        .logo {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            max-height: 50%;
-            max-width:30%;
-            width: auto;
-        }
+
+.slide.fade-out.backdrop {
+    animation: fadeOut 0.5s ease-out forward;
+}
+.logo {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    max-height: 50%;
+    max-width:30%;
+    width: auto;
+}
 .logo::before {
     content: "";
     position: absolute;
@@ -199,6 +225,7 @@ svg circle {
 .blur {
     filter:blur(5px) brightness(50%);
 }
+
     </style>
 </head>
 <body>
